@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- ANTI-CACHE -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <title>GameTournament Pro - Plateforme de Tournois Gaming</title>
+    <meta name="description" content="Organise et participe à des tournois gaming avec un système de récompenses Discord">
+    
+    <!-- PWA CONFIG -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#6366F1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+
+    <!-- FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --primary-light: #8B5CF6;
+            --secondary: #10B981;
+            --accent: #F59E0B;
+            --danger: #EF4444;
+            --dark: #0F172A;
+            --darker: #020617;
+            --light: #F8FAFC;
+            --gray: #64748B;
+            --gray-dark: #334155;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --glass: rgba(255, 255, 255, 0.1);
+            --gradient: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--darker);
+            color: var(--light);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Background Animation */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            padding: 1.5rem 0;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            background: var(--glass);
+            transform: translateY(-2px);
+        }
+        
+        .nav-links a.active {
+            background: var(--gradient);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 8rem 0 6rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--light) 30%, var(--primary-light) 70%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--gray);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-secondary {
+            background: var(--glass);
+            color: var(--light);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+        
+        /* Sections */
+        .section {
+            padding: 6rem 0;
+        }
+        
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--light) 30%, var(--primary) 70%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: var(--gray);
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 4rem;
+        }
+        
+        /* Game Search */
+        .game-search {
+            max-width: 600px;
+            margin: 0 auto 4rem;
+            position: relative;
+        }
+        
+        .search-container {
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 1.25rem 1.5rem 1.25rem 3rem;
+            background: var(--card-bg);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+        
+        /* Games Grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .game-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient);
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        .game-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+        }
+        
+        .game-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Tournament System */
+        .tournament-system {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 30px;
+            padding: 4rem;
+            margin-top: 4rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .system-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .step-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin: 0 auto 1.5rem;
+        }
+        
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--light);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: var(--card-bg);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        /* Footer */
+        footer {
+            background: rgba(15, 23, 42, 0.8);
+            padding: 4rem 0 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .tournament-system {
+                padding: 2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            animation: slideInRight 0.3s ease-out;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .notification.success {
+            background: rgba(16, 185, 129, 0.9);
+        }
+        
+        .notification.error {
+            background: rgba(239, 68, 68, 0.9);
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation"></div>
+    
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span>🎮</span>
+                    GameTournament
+                </div>
+                
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="#accueil" class="active">Accueil</a></li>
+                        <li><a href="#jeux">Jeux</a></li>
+                        <li><a href="#tournois">Tournois</a></li>
+                        <li><a href="#classement">Classement</a></li>
+                        <li><a href="#profil">Profil</a></li>
+                    </ul>
+                </nav>
+                
+                <button class="mobile-menu-btn">☰</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="accueil">
+        <div class="container">
+            <div class="hero-content fade-in-up">
+                <h1>La Plateforme Ultime pour les Tournois Gaming</h1>
+                <p>Rejoins des milliers de joueurs, participe à des tournois épiques et gagne des récompenses exclusives sur Discord.</p>
+                
+                <div class="game-search">
+                    <div class="search-container">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" id="gameSearch" placeholder="Rechercher un jeu...">
+                    </div>
+                </div>
+                
+                <div class="cta-buttons">
+                    <button class="btn btn-primary" onclick="scrollToSection('jeux')">
+                        <span>🎯</span>
+                        Voir les Jeux
+                    </button>
+                    <button class="btn btn-secondary" onclick="scrollToSection('tournois')">
+                        <span>⚡</span>
+                        Créer un Tournoi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card fade-in-up">
+                    <div class="stat-number" id="totalPlayers">12K</div>
+                    <div>Joueurs Actifs</div>
+                </div>
+                <div class="stat-card fade-in-up">
+                    <div class="stat-number" id="totalTournaments">856</div>
+                    <div>Tournois Créés</div>
+                </div>
+                <div class="stat-card fade-in-up">
+                    <div class="stat-number" id="totalGames">147</div>
+                    <div>Jeux Disponibles</div>
+                </div>
+                <div class="stat-card fade-in-up">
+                    <div class="stat-number" id="totalRewards">50K</div>
+                    <div>Zenis Distribués</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section class="section" id="jeux" style="background: rgba(15, 23, 42, 0.3);">
+        <div class="container">
+            <h2 class="section-title fade-in-up">🎮 Jeux Populaires</h2>
+            <p class="section-subtitle fade-in-up">Choisis ton jeu préféré et rejoins la compétition</p>
+            
+            <div class="games-grid">
+                <!-- Game cards will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Tournament System -->
+    <section class="section" id="tournois">
+        <div class="container">
+            <h2 class="section-title fade-in-up">🏆 Système de Tournois</h2>
+            <p class="section-subtitle fade-in-up">3 victoires = 1 point • 100 points = 50,000 Zenis sur Discord</p>
+            
+            <div class="tournament-system fade-in-up">
+                <div class="system-steps">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3>Choisis ton Jeu</h3>
+                        <p>Sélectionne parmi +100 jeux ou recherche le tien</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3>Rejoins un Tournoi</h3>
+                        <p>Inscris-toi avec ton pseudo Discord</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3>Combats et Gagne</h3>
+                        <p>3 victoires = 1 point dans le classement</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h3>Récolte tes Récompenses</h3>
+                        <p>100 points = 50,000 Zenis sur ton compte Discord</p>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 3rem;">
+                    <button class="btn btn-primary" onclick="showTournamentCreation()">
+                        <span>🚀</span>
+                        Créer mon Tournoi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaderboard -->
+    <section class="section" id="classement" style="background: rgba(15, 23, 42, 0.5);">
+        <div class="container">
+            <h2 class="section-title fade-in-up">🏅 Classement Global</h2>
+            <p class="section-subtitle fade-in-up">Les meilleurs joueurs de la plateforme</p>
+            
+            <div id="leaderboard">
+                <!-- Leaderboard will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Profile Section -->
+    <section class="section" id="profil">
+        <div class="container">
+            <h2 class="section-title fade-in-up">👤 Ton Profil</h2>
+            <p class="section-subtitle fade-in-up">Connecte ton compte Discord pour commencer</p>
+            
+            <div style="max-width: 500px; margin: 0 auto;">
+                <div class="game-card">
+                    <div class="form-group">
+                        <label class="form-label">Pseudo Discord</label>
+                        <input type="text" class="form-control" id="discordUsername" placeholder="TonPseudo#1234">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Jeu Préféré</label>
+                        <input type="text" class="form-control" id="favoriteGame" placeholder="Rechercher un jeu...">
+                    </div>
+                    <button class="btn btn-primary" onclick="saveProfile()" style="width: 100%;">
+                        <span>💾</span>
+                        Sauvegarder le Profil
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-logo">GameTournament</div>
+                    <p style="color: var(--gray);">La plateforme ultime pour les tournois gaming et les récompenses Discord.</p>
+                </div>
+                
+                <div>
+                    <h4 style="margin-bottom: 1rem; color: var(--light);">Navigation</h4>
+                    <ul style="list-style: none; color: var(--gray);">
+                        <li style="margin-bottom: 0.5rem;"><a href="#accueil" style="color: var(--gray); text-decoration: none;">Accueil</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="#jeux" style="color: var(--gray); text-decoration: none;">Jeux</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="#tournois" style="color: var(--gray); text-decoration: none;">Tournois</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="#classement" style="color: var(--gray); text-decoration: none;">Classement</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 style="margin-bottom: 1rem; color: var(--light);">Contact</h4>
+                    <p style="color: var(--gray);">Rejoins notre serveur Discord pour plus d'informations</p>
+                    <button class="btn btn-secondary" onclick="joinDiscord()">
+                        <span>🎯</span>
+                        Rejoindre Discord
+                    </button>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 GameTournament. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script -->
+    <script>
+        // Données des jeux
+        const popularGames = [
+            { id: 1, name: "League of Legends", icon: "⚔️", players: 2450, tournaments: 156 },
+            { id: 2, name: "Valorant", icon: "🎯", players: 1890, tournaments: 134 },
+            { id: 3, name: "Fortnite", icon: "🏰", players: 1670, tournaments: 98 },
+            { id: 4, name: "Call of Duty", icon: "🔫", players: 1420, tournaments: 87 },
+            { id: 5, name: "Minecraft", icon: "⛏️", players: 1980, tournaments: 76 },
+            { id: 6, name: "Rocket League", icon: "🚗", players: 1120, tournaments: 64 },
+            { id: 7, name: "Apex Legends", icon: "🏹", players: 980, tournaments: 53 },
+            { id: 8, name: "Dota 2", icon: "🛡️", players: 870, tournaments: 47 }
+        ];
+
+        // Classement des joueurs
+        const leaderboardData = [
+            { rank: 1, name: "ProGamer92", points: 450, game: "Valorant" },
+            { rank: 2, name: "EliteShooter", points: 420, game: "Call of Duty" },
+            { rank: 3, name: "MinecraftMaster", points: 380, game: "Minecraft" },
+            { rank: 4, name: "RLChampion", points: 350, game: "Rocket League" },
+            { rank: 5, name: "ApexPredator", points: 320, game: "Apex Legends" }
+        ];
+
+        // Initialisation
+        class GameTournamentApp {
+            constructor() {
+                this.games = this.loadFromStorage('gt_games') || popularGames;
+                this.players = this.loadFromStorage('gt_players') || [];
+                this.tournaments = this.loadFromStorage('gt_tournaments') || [];
+                this.userProfile = this.loadFromStorage('gt_profile') || {};
+                
+                this.init();
+            }
+
+            init() {
+                this.renderGames();
+                this.renderLeaderboard();
+                this.setupEventListeners();
+                this.updateStats();
+            }
+
+            // Rendu des jeux
+            renderGames() {
+                const container = document.querySelector('.games-grid');
+                container.innerHTML = this.games.map(game => `
+                    <div class="game-card fade-in-up" onclick="app.selectGame(${game.id})">
+                        <div class="game-icon">${game.icon}</div>
+                        <h3>${game.name}</h3>
+                        <div class="game-stats">
+                            <span>${game.players} joueurs</span>
+                            <span>${game.tournaments} tournois</span>
+                        </div>
+                        <button class="btn btn-secondary" style="width: 100%;">
+                            <span>🎯</span>
+                            Voir les Tournois
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            // Rendu du classement
+            renderLeaderboard() {
+                const container = document.getElementById('leaderboard');
+                const players = [...this.players].sort((a, b) => b.points - a.points).slice(0, 10);
+                
+                if (players.length === 0) {
+                    container.innerHTML = `
+                        <div class="game-card" style="text-align: center; padding: 3rem;">
+                            <h3 style="margin-bottom: 1rem;">🏆 Aucun joueur encore</h3>
+                            <p style="color: var(--gray); margin-bottom: 2rem;">
+                                Sois le premier à rejoindre la compétition!
+                            </p>
+                            <button class="btn btn-primary" onclick="scrollToSection('profil')">
+                                <span>🚀</span>
+                                Commencer Maintenant
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="game-card">
+                        <div style="display: grid; gap: 1rem;">
+                            ${players.map((player, index) => `
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 12px;">
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <div style="font-weight: 700; color: var(--primary);">#${index + 1}</div>
+                                        <div>
+                                            <div style="font-weight: 600;">${player.name}</div>
+                                            <div style="color: var(--gray); font-size: 0.9rem;">${player.game}</div>
+                                        </div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-weight: 700; color: var(--accent);">${player.points} pts</div>
+                                        <div style="color: var(--gray); font-size: 0.9rem;">${player.wins || 0} victoires</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Sélection d'un jeu
+            selectGame(gameId) {
+                const game = this.games.find(g => g.id === gameId);
+                if (game) {
+                    this.showNotification(`🎮 ${game.name} sélectionné!`, 'success');
+                    // Ici tu pourrais rediriger vers une page de tournois spécifique au jeu
+                }
+            }
+
+            // Recherche de jeux
+            searchGames(query) {
+                const filteredGames = this.games.filter(game => 
+                    game.name.toLowerCase().includes(query.toLowerCase())
+                );
+                
+                if (filteredGames.length === 0 && query.trim() !== '') {
+                    this.showAddGamePrompt(query);
+                } else {
+                    this.renderFilteredGames(filteredGames);
+                }
+            }
+
+            // Proposition d'ajout de jeu
+            showAddGamePrompt(gameName) {
+                if (confirm(`"${gameName}" n'est pas encore dans notre liste. Souhaites-tu l'ajouter ?`)) {
+                    const newGame = {
+                        id: Date.now(),
+                        name: gameName,
+                        icon: "🎮",
+                        players: 0,
+                        tournaments: 0
+                    };
+                    this.games.push(newGame);
+                    this.saveToStorage('gt_games', this.games);
+                    this.renderGames();
+                    this.showNotification(`🎉 "${gameName}" ajouté à la liste!`, 'success');
+                }
+            }
+
+            // Sauvegarde du profil
+            saveProfile() {
+                const username = document.getElementById('discordUsername').value;
+                const favoriteGame = document.getElementById('favoriteGame').value;
+                
+                if (!username) {
+                    this.showNotification('❌ Entre ton pseudo Discord!', 'error');
+                    return;
+                }
+
+                this.userProfile = {
+                    username: username,
+                    favoriteGame: favoriteGame,
+                    points: 0,
+                    joined: new Date().toLocaleDateString('fr-FR')
+                };
+
+                // Ajouter au classement si nouveau joueur
+                if (!this.players.find(p => p.name === username)) {
+                    this.players.push({
+                        name: username,
+                        game: favoriteGame || 'Non spécifié',
+                        points: 0,
+                        wins: 0
+                    });
+                }
+
+                this.saveToStorage('gt_profile', this.userProfile);
+                this.saveToStorage('gt_players', this.players);
+                this.renderLeaderboard();
+                this.updateStats();
+                
+                this.showNotification('✅ Profil sauvegardé avec succès!', 'success');
+            }
+
+            // Mise à jour des statistiques
+            updateStats() {
+                document.getElementById('totalPlayers').textContent = this.players.length;
+                document.getElementById('totalTournaments').textContent = this.tournaments.length;
+                document.getElementById('totalGames').textContent = this.games.length;
+                document.getElementById('totalRewards').textContent = (this.players.reduce((sum, p) => sum + p.points, 0) * 500).toLocaleString();
+            }
+
+            // Création de tournoi
+            showTournamentCreation() {
+                const gameName = prompt("Pour quel jeu veux-tu créer un tournoi ?");
+                if (gameName) {
+                    this.showNotification(`🎉 Tournoi "${gameName}" en préparation!`, 'success');
+                    // Ici tu pourrais ouvrir un formulaire de création de tournoi
+                }
+            }
+
+            // Rejoindre Discord
+            joinDiscord() {
+                this.showNotification('🎯 Rejoins-nous sur Discord: discord.gg/gametournament', 'success');
+            }
+
+            // Event Listeners
+            setupEventListeners() {
+                // Recherche en temps réel
+                document.getElementById('gameSearch').addEventListener('input', (e) => {
+                    this.searchGames(e.target.value);
+                });
+
+                // Navigation mobile
+                document.querySelector('.mobile-menu-btn').addEventListener('click', () => {
+                    document.querySelector('.nav-links').style.display = 
+                        document.querySelector('.nav-links').style.display === 'flex' ? 'none' : 'flex';
+                });
+
+                // Smooth scroll
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const target = document.querySelector(this.getAttribute('href'));
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    });
+                });
+            }
+
+            // Helpers
+            saveToStorage(key, data) {
+                localStorage.setItem(key, JSON.stringify(data));
+            }
+
+            loadFromStorage(key) {
+                try {
+                    const data = localStorage.getItem(key);
+                    return data ? JSON.parse(data) : null;
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            showNotification(message, type = 'success') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 4000);
+            }
+
+            renderFilteredGames(games) {
+                const container = document.querySelector('.games-grid');
+                if (games.length === 0) {
+                    container.innerHTML = `
+                        <div class="game-card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                            <h3 style="margin-bottom: 1rem;">🔍 Aucun jeu trouvé</h3>
+                            <p style="color: var(--gray);">
+                                Essaye avec d'autres termes ou ajoute le jeu à notre liste!
+                            </p>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = games.map(game => `
+                        <div class="game-card fade-in-up" onclick="app.selectGame(${game.id})">
+                            <div class="game-icon">${game.icon}</div>
+                            <h3>${game.name}</h3>
+                            <div class="game-stats">
+                                <span>${game.players} joueurs</span>
+                                <span>${game.tournaments} tournois</span>
+                            </div>
+                            <button class="btn btn-secondary" style="width: 100%;">
+                                <span>🎯</span>
+                                Voir les Tournois
+                            </button>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+
+        // Fonctions globales
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function saveProfile() {
+            app.saveProfile();
+        }
+
+        function showTournamentCreation() {
+            app.showTournamentCreation();
+        }
+
+        function joinDiscord() {
+            app.joinDiscord();
+        }
+
+        // Initialiser l'application
+        const app = new GameTournamentApp();
+
+        // Service Worker pour PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js')
+                .then(() => console.log('✅ PWA Ready!'))
+                .catch(err => console.log('❌ PWA Error:', err));
+        }
+
+        // Gestionnaire d'installation PWA
+        let installPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            installPrompt = e;
+            
+            const installBtn = document.createElement('button');
+            installBtn.textContent = '📱 Installer l\'App';
+            installBtn.className = 'btn btn-primary';
+            installBtn.style.cssText = 'position: fixed; bottom: 20px; right: 20px; z-index: 1000;';
+            installBtn.onclick = () => {
+                installPrompt.prompt();
+                installPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        installBtn.textContent = '✅ Installé!';
+                        setTimeout(() => installBtn.remove(), 2000);
+                    }
+                    installPrompt = null;
+                });
+            };
+            document.body.appendChild(installBtn);
+        });
+
+        console.log('🚀 GameTournament Pro - Plateforme chargée!');
+    </script>
+</body>
+</html>
